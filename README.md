@@ -1,10 +1,3 @@
-# Sección 12: Creando Productos y Categorias en nuestro proyecto
+# SECCIÓN 16 SOCKET.IO CON AUTH
 
-## Aquí cubriremos varios temas como:
-
--   Tareas
--   CRUD de categorías y productos
--   Relaciones
--   Populate
--   Búsquedas
--   Despliegues a producción
+En esta sección utilizaremos el codebase de la sección 14 para incorporar un chat usando sockets con authenticación.

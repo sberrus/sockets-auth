@@ -1,5 +1,6 @@
 //Imports
 const express = require("express");
+const { createServer } = require("http"); //Paquete para iniciar el servidor de Socket.io
 
 //Middlewares
 const cors = require("cors");
@@ -8,10 +9,17 @@ const fileUpload = require("express-fileupload");
 //Configs
 const { dbConection } = require("../database/config");
 
+//Socket Controller
+const { socketController } = require("../sockets/controller");
+
 class Server {
 	constructor() {
 		this.app = express();
 		this.port = process.env.PORT;
+
+		//Inicializamos server de Socket.io
+		this.server = createServer(this.app);
+		this.io = require("socket.io")(this.server); //IIEF recive como argumento el server que inicializamos para Socket.io
 
 		//No optimizado
 		// this.usersPath = "/api/users";
@@ -36,6 +44,9 @@ class Server {
 
 		//Rutas de la app
 		this.routes();
+
+		//Sockets
+		this.sockets();
 	}
 
 	async conectarDB() {
@@ -57,7 +68,6 @@ class Server {
 			fileUpload({
 				useTempFiles: true,
 				tempFileDir: "/tmp/",
-				// Esta propiedad nos permite darle permiso a la express-fileuploads que en el caso de que la ruta de la carpeta que hayamos especificado en el método mv() a la hora de recivir un archivo, se cree automáticamente y pueda ser accedida. [No se recomienda utilizar esta propiedad porque no muestra ciertos errores y hace parecer que todo el programa esta funcionando correctamente]
 				createParentPath: true,
 			})
 		);
@@ -72,10 +82,22 @@ class Server {
 		this.app.use(this.paths.busquedas, require("../routes/busquedas"));
 		this.app.use(this.paths.uploads, require("../routes/uploads"));
 	}
+
+	sockets() {
+		this.io.on("connection", socketController);
+	}
+
 	listen() {
-		this.app.listen(this.port, () => {
-			console.log(`Servidor corriendo en puerto ${this.port}`);
+		//Inicializamos el server del socket ya que vamos a trabajar con este.
+
+		this.server.listen(this.port, () => {
+			console.log(`Servidor socket.io corriendo en puerto ${this.port}`);
 		});
+
+		//~ ANTES ~
+		// this.app.listen(this.port, () => {
+		// 	console.log(`Servidor corriendo en puerto ${this.port}`);
+		// });
 	}
 }
 module.exports = Server;

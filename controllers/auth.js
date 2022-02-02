@@ -1,11 +1,19 @@
 //Imports
-const { response } = require("express");
+const { response, request } = require("express");
 const bcryptjs = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+
 //Schemas
 const Usuario = require("../models/usuario");
 const { generarJWT } = require("../helpers/jwt-generator");
 const { googleVerify } = require("../helpers/google-verify");
+
+const validarToken = (req = request, res) => {
+	const { token } = req.headers;
+	console.log(token);
+
+	//validar que el token que viene del header es válido
+	res.status(200).json({ validToken: true });
+};
 
 const login = async (req = request, res = response) => {
 	const { correo, password } = req.body;
@@ -15,22 +23,16 @@ const login = async (req = request, res = response) => {
 		//existe correo
 		const usuario = await Usuario.findOne({ correo });
 		if (!usuario) {
-			return res
-				.status(400)
-				.json({ msg: "Error al iniciar sesión - Correo" });
+			return res.status(400).json({ msg: "Error al iniciar sesión - Correo" });
 		}
 		//usuario activo
 		if (usuario.estado === false) {
-			return res
-				.status(400)
-				.json({ msg: "Error al iniciar sesión - Estado" });
+			return res.status(400).json({ msg: "Error al iniciar sesión - Estado" });
 		}
 		//contraseña
 		const validPassword = bcryptjs.compareSync(password, usuario.password);
 		if (!validPassword) {
-			return res
-				.status(400)
-				.json({ msg: "Error al iniciar sesión - Password" });
+			return res.status(400).json({ msg: "Error al iniciar sesión - Password" });
 		}
 		//generar JWT
 		const token = await generarJWT(usuario.id);
@@ -53,8 +55,6 @@ const googleSignIn = async (req, res = response) => {
 	try {
 		//enviamos el token que nos devuelve el cliente al haberse loggeado con el boton de google y extraemos la información de dicho token con los métodos de autenticación en el backend de google.
 		const { nombre, img, correo } = await googleVerify(id_token);
-
-
 
 		//Comprobando si el correo ya esta registrado en la bbdd.
 		let usuario = await Usuario.findOne({ correo });
@@ -102,4 +102,4 @@ const googleSignIn = async (req, res = response) => {
 	}
 };
 
-module.exports = { login, googleSignIn };
+module.exports = { login, googleSignIn, validarToken };
