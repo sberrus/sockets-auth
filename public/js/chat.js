@@ -1,23 +1,26 @@
 // validar que exista el token
 const _token = localStorage.getItem("token");
 if (!_token) {
-	window.location.href = "http://localhost:8080";
+	window.location.href = location.origin;
 }
 
-//Validar que token sea válido
-fetch("api/auth", {
-	headers: {
-		"Content-Type": "application/json",
-		authorization: localStorage.getItem("token"),
-	},
-})
-	.then((res) => {
-		if (res.status !== 200) {
-			location.href = "http://localhost:8080";
-			localStorage.removeItem("token");
-			return;
-		}
-		res.json();
-	})
-	.then((res) => console.log(res))
-	.catch((err) => console.log(err));
+const main = async () => {
+	//Validar que token sea válido
+	const res = await fetch(location.origin + "/api/auth", {
+		headers: {
+			"Content-Type": "application/json",
+			authorization: localStorage.getItem("token"),
+		},
+	});
+
+	if (res.status !== 200) {
+		location.href = location.origin;
+		localStorage.removeItem("token");
+		return;
+	}
+
+	const data = await res.json();
+	console.log(data);
+};
+
+main();

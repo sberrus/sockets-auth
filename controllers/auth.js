@@ -7,12 +7,11 @@ const Usuario = require("../models/usuario");
 const { generarJWT } = require("../helpers/jwt-generator");
 const { googleVerify } = require("../helpers/google-verify");
 
-const validarToken = (req = request, res) => {
-	const { token } = req.headers;
-	console.log(token);
-
-	//validar que el token que viene del header es válido
-	res.status(200).json({ validToken: true });
+const validarToken = async (req = request, res) => {
+	const { usuario } = req;
+	//generar nuevo jwt
+	const token = await generarJWT(req.uid);
+	res.status(200).json({ usuario, token });
 };
 
 const login = async (req = request, res = response) => {
