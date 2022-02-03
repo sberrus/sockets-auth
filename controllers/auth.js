@@ -52,7 +52,7 @@ const googleSignIn = async (req, res = response) => {
 	const { id_token } = req.body;
 
 	try {
-		//enviamos el token que nos devuelve el cliente al haberse loggeado con el boton de google y extraemos la información de dicho token con los métodos de autenticación en el backend de google.
+		//Enviamos el token para que lo verifique google y nos devuelva los datos del usuario que se esta logueando.
 		const { nombre, img, correo } = await googleVerify(id_token);
 
 		//Comprobando si el correo ya esta registrado en la bbdd.
@@ -84,10 +84,12 @@ const googleSignIn = async (req, res = response) => {
 		}
 
 		//Generar el jwt
-		const token = await generarJWT(usuario.id);
+		const uid = usuario.id; //te odio
+		const token = await generarJWT(uid);
 
-		res.json({
-			usuario,
+		res.status(200).json({
+			ok: true,
+			usuario: { correo: usuario.correo },
 			token,
 		});
 	} catch (error) {

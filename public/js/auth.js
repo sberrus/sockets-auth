@@ -31,6 +31,9 @@ signInForm.addEventListener("submit", (e) => {
 //#endregion
 
 //#region Google Auth
+//
+// INICIAR SESION
+//
 //Función que se ejecuta al finalizar el proceso de logeo de google, callback que devuelve una response con las credenciales del usuario logeado.
 async function handleCredentialResponse(response) {
 	const body = { id_token: response.credential };
@@ -42,8 +45,9 @@ async function handleCredentialResponse(response) {
 		.then((res) => {
 			//Almacenamos el correo del usuario logeado y lo almacenamos en localstorage para poder utilizarlo luego para realizar el logout
 			localStorage.setItem("correo", res.data.usuario.correo);
-			localStorage.setItem("u-token", JSON.stringify(res.data.token));
-			location.reload();
+			localStorage.setItem("token", JSON.stringify(res.data.token));
+			console.log(res.data);
+			// location.href = location.origin + "/chat.html";
 		})
 		.catch((err) => {
 			console.log(err);
@@ -52,6 +56,9 @@ async function handleCredentialResponse(response) {
 	//Google Token A.K.A = ID_TOKEN
 }
 
+//
+// CERRA SESION DE GOOGLE
+//
 //Llamamos al boton para asignarle el evento click
 const signoutButton = document.querySelector("#signout");
 if (!localStorage.getItem("correo")) {
@@ -76,7 +83,4 @@ signoutButton.addEventListener("click", () => {
 	);
 });
 
-if (localStorage.getItem("u-token")) {
-	console.log(JSON.parse(localStorage.getItem("u-token")));
-}
 //#endregion

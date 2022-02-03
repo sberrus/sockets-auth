@@ -1,10 +1,13 @@
-// validar que exista el token
-const _token = localStorage.getItem("token");
-if (!_token) {
-	window.location.href = location.origin;
-}
+//Script para validar que el token exista y que sea válido
+
+let usuario;
 
 const main = async () => {
+	// validar que exista el token
+	const _token = localStorage.getItem("token");
+	if (!_token) {
+		// window.location.href = location.origin;
+	}
 	//Validar que token sea válido
 	const res = await fetch(location.origin + "/api/auth", {
 		headers: {
@@ -14,13 +17,19 @@ const main = async () => {
 	});
 
 	if (res.status !== 200) {
-		location.href = location.origin;
-		localStorage.removeItem("token");
+		// location.href = location.origin;
+		// localStorage.removeItem("token");
+		console.log(await res.json());
 		return;
 	}
 
-	const data = await res.json();
-	console.log(data);
+	const { usuario: usuarioDB, token: tokenDB } = await res.json();
+
+	localStorage.setItem("token", tokenDB);
+
+	usuario = usuarioDB;
+
+	document.title = `Bienvenido ${usuario.nombre}`;
 };
 
 main();
