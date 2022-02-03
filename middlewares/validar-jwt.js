@@ -10,6 +10,7 @@ const validarJWT = async (req = request, res, next) => {
 	}
 	try {
 		//Verificar el JWT, el primer argumento es el token que deseamos verificar y el segundo es la llave privada que nos permite realizar la verificación.
+
 		const { uid } = jwt.verify(token, process.env.TOKEN_PRIVATE_KEY);
 
 		// leer el usuario que corresponde al uid

@@ -21,6 +21,7 @@ const login = async (req = request, res = response) => {
 		//Vaidaciones
 		//existe correo
 		const usuario = await Usuario.findOne({ correo });
+
 		if (!usuario) {
 			return res.status(400).json({ msg: "Error al iniciar sesión - Correo" });
 		}
@@ -36,7 +37,7 @@ const login = async (req = request, res = response) => {
 		//generar JWT
 		const token = await generarJWT(usuario.id);
 
-		res.json({
+		res.status(200).json({
 			usuario,
 			token,
 		});
@@ -84,8 +85,7 @@ const googleSignIn = async (req, res = response) => {
 		}
 
 		//Generar el jwt
-		const uid = usuario.id; //te odio
-		const token = await generarJWT(uid);
+		const token = await generarJWT(usuario.id);
 
 		res.status(200).json({
 			ok: true,

@@ -6,7 +6,7 @@ const main = async () => {
 	// validar que exista el token
 	const _token = localStorage.getItem("token");
 	if (!_token) {
-		// window.location.href = location.origin;
+		window.location.href = location.origin;
 	}
 	//Validar que token sea válido
 	const res = await fetch(location.origin + "/api/auth", {
@@ -17,13 +17,15 @@ const main = async () => {
 	});
 
 	if (res.status !== 200) {
-		// location.href = location.origin;
-		// localStorage.removeItem("token");
+		location.href = location.origin;
+		localStorage.removeItem("token");
 		console.log(await res.json());
 		return;
 	}
 
 	const { usuario: usuarioDB, token: tokenDB } = await res.json();
+
+	console.log(usuarioDB);
 
 	localStorage.setItem("token", tokenDB);
 

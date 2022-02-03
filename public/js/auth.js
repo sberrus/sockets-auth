@@ -4,7 +4,7 @@ const signInForm = document.querySelector("form");
 
 signInForm.addEventListener("submit", (e) => {
 	e.preventDefault();
-
+	console.log("jasasjfhlasjkdfh");
 	const formData = {
 		correo: signInForm.elements.emailInput.value,
 		password: signInForm.elements.passwordInput.value,
@@ -22,6 +22,7 @@ signInForm.addEventListener("submit", (e) => {
 			if (res.msg || res.errors) {
 				return console.log("Ha ocurrido un error", res.errors || res.msg);
 			}
+			console.log(res.token);
 			localStorage.setItem("token", res.token);
 			window.location.href = "http://localhost:8080/chat.html";
 		})
@@ -37,6 +38,7 @@ signInForm.addEventListener("submit", (e) => {
 //Función que se ejecuta al finalizar el proceso de logeo de google, callback que devuelve una response con las credenciales del usuario logeado.
 async function handleCredentialResponse(response) {
 	const body = { id_token: response.credential };
+	console.log(body);
 	await axios({
 		method: "POST",
 		url: "/api/auth/google",
@@ -45,9 +47,9 @@ async function handleCredentialResponse(response) {
 		.then((res) => {
 			//Almacenamos el correo del usuario logeado y lo almacenamos en localstorage para poder utilizarlo luego para realizar el logout
 			localStorage.setItem("correo", res.data.usuario.correo);
-			localStorage.setItem("token", JSON.stringify(res.data.token));
+			localStorage.setItem("token", res.data.token);
 			console.log(res.data);
-			// location.href = location.origin + "/chat.html";
+			location.href = location.origin + "/chat.html";
 		})
 		.catch((err) => {
 			console.log(err);
