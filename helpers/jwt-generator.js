@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { Usuario } = require("../models");
 
 const generarJWT = (uid = "") => {
 	//p*: en el payload del jwt tenemos que tomar en cuenta que es información que, a pesar de estar encriptada, puede ser accedida desde el cliente y se puede acceder a la información que contiene. Una de las cosas que tenemos que tener en cuenta es la seguridad de la misma aplicandole firmas unicas privadas que nos permitan darle una capa extra de seguridad al token.
@@ -27,4 +28,30 @@ const generarJWT = (uid = "") => {
 		);
 	});
 };
-module.exports = { generarJWT };
+
+/**
+ * OBTENEMOS EL TOKEN Y LO VERIFICAMOS PARA OBTENER LE UID DE MONGO Y BUSCAR
+ * AL USUARIO CORRESPONDIENTE
+ * @param {*} token token generado desde el backend
+ * @returns
+ */
+const comprobarJWTFromSocket = async (token = "") => {
+	try {
+		if (token.length < 10) {
+			return null;
+		}
+		const { uid } = jwt.verify(token, process.env.TOKEN_PRIVATE_KEY);
+		const usuario = await Usuario.findById(uid);
+
+		if (usuario && usuario.estado) {
+			return usuario;
+		} else {
+			return null;
+		}
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};
+
+module.exports = { generarJWT, comprobarJWTFromSocket };

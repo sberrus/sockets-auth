@@ -18,6 +18,9 @@
 			integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
 			crossorigin="anonymous"
 		/>
+
+		<!-- SCRIPTS -->
+		<script src="js/router.js"></script>
 	</head>
 	<body>
 		<div class="container">
@@ -45,7 +48,7 @@
 						data-locale="es"
 						data-logo_alignment="left"
 					></div>
-					<button id="signout" class="btn btn-danger">Signout</button>
+					<button id="GoogleSignout" class="btn btn-danger">Signout</button>
 				</div>
 				<div class="col-6">
 					<h1>Regular Sign In</h1>
@@ -62,10 +65,15 @@
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</form>
 				</div>
+				<div class="col-12"><a href="./chat.html">ir a Chat</a></div>
 			</div>
 		</div>
 
-		<script src="./js/auth.js"></script>
+		<!-- SCRIPTS -->
+
+		<script src="./js/auth/auth.js"></script>
+		<script src="./js/auth/googleSignIn/login.js"></script>
+		<script src="./js/auth/googleSignIn/logout.js"></script>
 
 		<!--BOOTSTRAP SCRIPTS-->
 		<script
