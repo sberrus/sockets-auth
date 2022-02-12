@@ -76,13 +76,9 @@ const conectarSocket = async () => {
 		console.log("Socket desconectado");
 	});
 
-	socket.on("recibir-mensaje", () => {
-		//TODO
-	});
+	socket.on("recibir-mensaje", console.log);
 	socket.on("usuarios-activos", pintarListaUsuarios);
-	socket.on("recibir-mensaje-privado", () => {
-		//TODO
-	});
+	socket.on("recibir-mensaje-privado", console.log);
 };
 
 /**
@@ -108,6 +104,19 @@ const pintarListaUsuarios = (usuarios = []) => {
 	});
 	ulUsuarios.innerHTML = usuariosHtml;
 };
+
+txtMensaje.addEventListener("keyup", ({ keyCode }) => {
+	const mensaje = txtMensaje.value;
+	const uid = txtUid.value;
+
+	//Validaciones simples solo para ejemplo.
+	if (keyCode !== 13) return;
+	if (mensaje.length === 0) return;
+
+	socket.emit("enviar-mensaje", { mensaje, uid });
+
+	txtMensaje.value = "";
+});
 
 const main = async () => {
 	//Validar JWT

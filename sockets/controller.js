@@ -34,6 +34,11 @@ const socketController = async (socket = new Socket(), io) => {
 		mensajesChat.desconectarUsuario(usuario.id);
 		io.emit("usuarios-activos", mensajesChat.usuariosArr);
 	});
+
+	socket.on("enviar-mensaje", ({ mensaje, uid }) => {
+		mensajesChat.enviarMensaje(usuario.uid, usuario.nombre, mensaje);
+		io.emit("recibir-mensaje", mensajesChat.ultimos10)
+	});
 };
 
 module.exports = {
