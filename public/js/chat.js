@@ -1,6 +1,13 @@
 //Script para validar que el token exista y que sea válido
 
 let usuario;
+let socket;
+
+//Referencias HTML
+const txtUid = document.querySelector("#txtUid");
+const txtMensaje = document.querySelector("#txtMensaje");
+const ulUsuarios = document.querySelector("#ulUsuarios");
+const ulMensajes = document.querySelector("#ulMensajes");
 
 /**
  * VALIDAMOS QUE EL JWT DE INICIO DE SESIÓN ENVIADO DESDE EL BACKEND SEA VÁLIDO
@@ -11,6 +18,8 @@ const validarJWT = async () => {
 	const _token = localStorage.getItem("token");
 	if (!_token) {
 		window.location.href = location.origin;
+		localStorage.removeItem("correo");
+		localStorage.removeItem("token");
 	}
 
 	//Validar que token sea válido
@@ -51,10 +60,29 @@ const conectarSocket = async () => {
 	 * Usaremos la propiedad "extraHeaders" que nos sirve para enviar headers adicionales al
 	 * momento de iniciar una nueva conexión con el backend
 	 */
-	const socket = io({
+	socket = io({
 		extraHeaders: {
 			token: localStorage.getItem("token"),
 		},
+	});
+
+	socket.on("connect", () => {
+		// Logica para cuando se conecta el socket
+		console.log("Socket conectado");
+	});
+	socket.on("disconnect", () => {
+		// Logica para cuando se desconecta el socket
+		console.log("Socket desconectado");
+	});
+
+	socket.on("recibir-mensaje", () => {
+		//TODO
+	});
+	socket.on("usuarios-activos", () => {
+		//TODO
+	});
+	socket.on("recibir-mensaje-privado", () => {
+		//TODO
 	});
 };
 
