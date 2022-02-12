@@ -33,7 +33,7 @@ const generarJWT = (uid = "") => {
  * OBTENEMOS EL TOKEN Y LO VERIFICAMOS PARA OBTENER LE UID DE MONGO Y BUSCAR
  * AL USUARIO CORRESPONDIENTE
  * @param {*} token token generado desde el backend
- * @returns
+ * @returns modelo MongoDB de usuario enviado por el token
  */
 const comprobarJWTFromSocket = async (token = "") => {
 	try {

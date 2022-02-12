@@ -27,10 +27,10 @@ class MensajesChat {
 	}
 
 	/**
-	 * Obtiene todos los usuarios conectados en el servidor
+	 * Obtiene todos los usuarios conectados.
 	 */
 	get usuariosArr() {
-		return Object.values(usuarios);
+		return Object.values(this.usuarios);
 	}
 
 	/**

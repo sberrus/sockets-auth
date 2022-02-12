@@ -11,4 +11,5 @@ module.exports = {
 	Usuario,
 	Product,
 	Server,
+	MensajesChat,
 };

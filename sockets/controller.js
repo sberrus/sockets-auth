@@ -1,12 +1,21 @@
-const { Socket } = require("socket.io"); //Obtenemos el Socket solamente para que VSCode nos ayude con la documentación.
+const { Socket } = require("socket.io");
 
 //Helpers
 const { comprobarJWTFromSocket } = require("../helpers");
 
-//Usamos new Socket() como "default parameter" para poder obtener la documentación a la hora de programar.
-//Hay que tomar en cuenta que al momento de enviar a producción hay que eliminar estos pasos para evitar problemas y errores de seguridad.
-const socketController = async (socket = new Socket()) => {
-	//Capturamos el token que nos envian desde el cliente
+//Modelos
+const { MensajesChat } = require("../models");
+
+const mensajesChat = new MensajesChat();
+
+/**
+ * Controlador de los sockets
+ * @param {*} socket Socket Object, Biblioteca para poder obtener ayudas en el editor de texto
+ * @param {*} io Servidor de Sockets
+ * @returns
+ */
+const socketController = async (socket = new Socket(), io) => {
+	//Capturamos el token que nos envian desde el cliente en el header personalizado de socket.io.
 	const token = socket.handshake.headers["token"];
 
 	//Verificamos que el token sea válido y extraemos el usuario del mismo.
@@ -16,7 +25,15 @@ const socketController = async (socket = new Socket()) => {
 	if (!usuario) {
 		return socket.disconnect();
 	}
-	console.log(`Cliente ${usuario.nombre} conectado`);
+
+	//Agregar el usuario conectado
+	mensajesChat.conectarUsuario(usuario);
+	io.emit("usuarios-activos", mensajesChat.usuariosArr);
+
+	socket.on("disconnect", () => {
+		mensajesChat.desconectarUsuario(usuario.id);
+		io.emit("usuarios-activos", mensajesChat.usuariosArr);
+	});
 };
 
 module.exports = {

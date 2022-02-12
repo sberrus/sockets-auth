@@ -67,19 +67,21 @@ const conectarSocket = async () => {
 	});
 
 	socket.on("connect", () => {
-		// Logica para cuando se conecta el socket
+		// Logica para cuando hay conexión socket-cliente.
 		console.log("Socket conectado");
 	});
+
 	socket.on("disconnect", () => {
-		// Logica para cuando se desconecta el socket
+		// Logica para cuando no hay conexión socket-cliente.
 		console.log("Socket desconectado");
 	});
 
 	socket.on("recibir-mensaje", () => {
 		//TODO
 	});
-	socket.on("usuarios-activos", () => {
+	socket.on("usuarios-activos", (payload) => {
 		//TODO
+		console.log(payload);
 	});
 	socket.on("recibir-mensaje-privado", () => {
 		//TODO
