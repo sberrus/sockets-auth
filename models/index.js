@@ -1,4 +1,5 @@
 const Categoria = require("./categoria");
+const MensajesChat = require("./mensajes-chat");
 const Role = require("./role");
 const Usuario = require("./usuario");
 const Product = require("./product");
