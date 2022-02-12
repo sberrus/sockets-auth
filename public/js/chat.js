@@ -79,13 +79,34 @@ const conectarSocket = async () => {
 	socket.on("recibir-mensaje", () => {
 		//TODO
 	});
-	socket.on("usuarios-activos", (payload) => {
-		//TODO
-		console.log(payload);
-	});
+	socket.on("usuarios-activos", pintarListaUsuarios);
 	socket.on("recibir-mensaje-privado", () => {
 		//TODO
 	});
+};
+
+/**
+ * Lísta a todos los usuarios conectados en el chat
+ * @param {*} usuarios Lista de usuarios que recibimos del backend
+ */
+const pintarListaUsuarios = (usuarios = []) => {
+	let usuariosHtml = "";
+	//Esta no es la forma más optima de pintar los usuarios y va a depender de la libreria
+	//la cual estemos utilizando para el frontend ya sea React, Vue, Angular etc...
+	//En js plano la forma más ideal es usando los fragments de JS
+	usuarios.forEach(({ nombre, uid }) => {
+		usuariosHtml += `
+		
+		<li>
+			<p>
+				<h5 class="text-success">${nombre}</h5>
+				<span class"fs-6 text-muted">${uid}</span>
+			</p>
+		</li>
+
+		`;
+	});
+	ulUsuarios.innerHTML = usuariosHtml;
 };
 
 const main = async () => {
