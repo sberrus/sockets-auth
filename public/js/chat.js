@@ -76,9 +76,13 @@ const conectarSocket = async () => {
 		console.log("Socket desconectado");
 	});
 
-	socket.on("recibir-mensaje", console.log);
+	socket.on("recibir-mensaje", (payload) => {
+		pintarMensajes(payload);
+	});
 	socket.on("usuarios-activos", pintarListaUsuarios);
-	socket.on("recibir-mensaje-privado", console.log);
+	socket.on("recibir-mensaje-privado", (payload) => {
+		console.log("Privado: ", payload);
+	});
 };
 
 /**
@@ -103,6 +107,28 @@ const pintarListaUsuarios = (usuarios = []) => {
 		`;
 	});
 	ulUsuarios.innerHTML = usuariosHtml;
+};
+
+/**
+ * Pinta todos los mensajes del chat
+ * @param {*} mensajes Lista de mensajes que queremos pintar
+ */
+const pintarMensajes = (mensajes = []) => {
+	let mensajesHTML = "";
+	//Esta no es la forma más optima de pintar los usuarios y va a depender de la libreria
+	//la cual estemos utilizando para el frontend ya sea React, Vue, Angular etc...
+	//En js plano la forma más ideal es usando los fragments de JS
+	mensajes.forEach(({ nombre, mensaje }) => {
+		mensajesHTML += `
+		
+		<li class="py-1 px-3 mb-1">
+				<small class="text-success">${nombre}: </small>
+				<span class"text-secondary">${mensaje}</span>
+		</li>
+
+		`;
+	});
+	ulMensajes.innerHTML = mensajesHTML;
 };
 
 txtMensaje.addEventListener("keyup", ({ keyCode }) => {

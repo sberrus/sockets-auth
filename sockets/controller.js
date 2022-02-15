@@ -35,9 +35,18 @@ const socketController = async (socket = new Socket(), io) => {
 		io.emit("usuarios-activos", mensajesChat.usuariosArr);
 	});
 
+	//Conectar a una sala especial
+	socket.join(usuario.id);
+
 	socket.on("enviar-mensaje", ({ mensaje, uid }) => {
+		if (uid) {
+			//mensaje privado
+			socket.to(uid).emit("recibir-mensaje-privado", { from: usuario.nombre, mensaje });
+
+			return;
+		}
 		mensajesChat.enviarMensaje(usuario.uid, usuario.nombre, mensaje);
-		io.emit("recibir-mensaje", mensajesChat.ultimos10)
+		io.emit("recibir-mensaje", mensajesChat.ultimos10);
 	});
 };
 
